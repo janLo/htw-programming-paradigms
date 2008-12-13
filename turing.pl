@@ -1,12 +1,16 @@
-% Ein Element auf einen Stapel legen
+% Einfacher Turingprototyp
+
+% Element auf das Band legen
 myPush(List, Elem, Result) :- Result = [Elem|List].
 
-% Ein Element von einem Stapel holen
+% Element vom Band holen
 myPop([Elem|Result], Elem, Result).
 myPop([], Elem, Result) :- bl(X), Elem = X, Result = '[]'.
 
-% Umordnen der Elemente bei Verschiebung des Bandes
+% Vorheriges Bandelement
 myPrev(PListOld, PListNew, NListOld, NListNew, ElemOld, ElemNew) :- myPush(NListOld, ElemOld, NListNew), myPop(PListOld, ElemNew, PListNew).
+
+% Nästes Bandelement
 myNext(PListOld, PListNew, NListOld, NListNew, ElemOld, ElemNew) :- myPush(PListOld, ElemOld, PListNew), myPop(NListOld, ElemNew, NListNew).
 
 % Bewegung des Bandes
@@ -55,7 +59,6 @@ myPrintProgress(PList, NewPList, NList, NewNList,  Elem, NewElem, NewElem2, Zst,
 						  write('      '),myPrint(NewPList, NewNList,  NewElem2),nl,
 						  sleep(1),!.
 
-
 % Vollziehen der Zustandsuebergaenge der Turingmaschine 
 run(PList, NList, Elem, z(Zst), N)  :- ze(z(Zst)), 
                                        write('Fertig nach '), write(N), write(' Schritten:'), nl,
@@ -72,7 +75,6 @@ run(PList, NList, Elem, z(Zst), N)  :- b(Elem),
 	                               M is N+1,
 				       myPrintProgress(PList, NewPList, NList, NewNList, Elem, NewElem, NewElem2,Zst,NewZst, r(Dir), M),nl,
 				       run(NewPList, NewNList, NewElem2, z(NewZst), M),!. 
-
 
 % prepareBand2 bringt die als Startband angegebene Liste in die Form [vorgängerliste], aktuelles 
 % Element, [Nachfolgerliste]. Als Aktuelles Element wird das Element an der als Startposition
