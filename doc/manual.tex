@@ -13,7 +13,31 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsfonts}
-%\usepackage{listings}
+\usepackage{listings}
+
+\lstset{language=bash, 
+    keywordstyle=\color{blue!80!black!100}, 
+    identifierstyle=, 
+    commentstyle=\color{green!50!black!100}, 
+    stringstyle=\ttfamily, 
+    breaklines=true, 
+    columns=fixed,
+    numbers=left, 
+    xleftmargin=20pt,
+    framexleftmargin=21pt,
+    rulecolor=\color{white!40!black!70},
+    backgroundcolor=\color{white!90!black!25},
+    numbersep=9pt,
+    numberstyle=\tiny, 
+    frame=single, 
+    % basicstyle=\small\ttfamily\bfseries, % print whole listing small 
+    basicstyle=\scriptsize\ttfamily\bfseries, % print whole listing small 
+    linewidth=\linewidth,       % Zeilenbreite 
+    breaklines=true,
+    showstringspaces=false,
+    breakatwhitespace=true, %Umbruch an Leerzeichen 
+    captionpos=t 
+}
 
 \setkomafont{caption}{\footnotesize\linespread{1}\selectfont}
 \setlength{\abovecaptionskip}{-0.1cm}
@@ -150,25 +174,25 @@ Vollziehen der Zustandsübergänge mit dem Startzustand in Gang gesetzt.
 \chapter{Benutzung}
 
 \section{Definition}
-Die Turingmaschine muss zuerst definiert werden. Dazu gehören folgende
-Bestandteile:
+Die Turingmaschine muss zuerst definiert werden. Die Definitionen stehen
+in der Datei \texttt{program.pl}. Dazu gehören folgende Bestandteile:
 \begin{itemize}
-    \item Die Bewegungsrichtung des Bandes "`\texttt{r(zeichen)}"'. Für
-	"`zeichen"' gibt es genau 3 Werte: \texttt{r} für rechts,
-	\texttt{l} für Links und \texttt{n} um die Position nicht zu
-	ändern.
-    \item Das Eingabealphabet "`\texttt{e(zeichen)}"'. Um zum Beispiel
+    \item Die Bewegungsrichtung des Bandes "`\texttt{r(Zeichen)}"'. Für
+	"`Zeichen"' gibt es genau drei Werte: "`\texttt{r}"' für rechts,
+	"`\texttt{l}"' für Links und "`\texttt{n}"' um die Position nicht 
+	zu ändern.
+    \item Das Eingabealphabet "`\texttt{e(Zeichen)}"'. Um zum Beispiel
 	"`\texttt{1}"' als Zeichen des Eingabealphabes zu definieren
 	muss die Klausel "`\texttt{e(1)}"' definiert werden.
-    \item Das Blank-Zeichen \texttt{bl(zeichen)}, welches ein leeres
+    \item Das Blank-Zeichen \texttt{bl(Zeichen)}, welches ein leeres
 	Feld auf dem Band repräsentiert. Soll "`\texttt{\%}"' als
-	Blankzeichen zu definieren ist die Klausel "`\texttt{bl(\%)}"'
+	BlankZeichen zu definieren ist die Klausel "`\texttt{bl(\%)}"'
 	nötig.	
-    \item Das Bandalphabet "`\texttt{b(zeichen)}"'. Dies besteht aus 
+    \item Das Bandalphabet "`\texttt{b(Zeichen)}"'. Dies besteht aus 
 	dem Eingabealphabet und dem Blank-Zeichen. Daher besteht diese 
 	Definition aus den zwei Klauseln "`\texttt{b(X) :- e(X).}"' 
 	und "`\texttt{b(X) :- bl(X).}"'.
-    \item Den Zuständen "`\texttt{z(zeichen)}"'. Jeder Zustand
+    \item Den Zuständen "`\texttt{z(Zeichen)}"'. Jeder Zustand
 	"`\texttt{n}"' muss mit einer Definition "`\texttt{z(n)}"' 
 	aufgeführt werden.	
     \item Dem Anfangszustand "`\texttt{za(zustand)}"'. Soll zum 
@@ -194,7 +218,57 @@ Bestandteile:
 	dritten Element stehen ist die Definition "`\texttt{ap(3)}"'
 	notwendig.	
 \end{itemize}
+All diese Definitionen sind notwendig für die Ausführung der Simulation.
 
 \section{Ausführung}
+Zur Ausführung der Simulation müssen beide Dateien (\texttt{turing.pl}
+mit den Klauseln zur Simulation und \texttt{program.pl} mit den
+Definitionen der zu simulierenden Maschine) in das Prologsystem geladen
+werden. Als Prologsystem wurde bei der Implementierung SWI-Prolog
+gewählt.  
+
+Das Laden der Dateien geschieht im SWI-Prolog durch angabe des
+Dateinamends in Eckigen Klammern mit abschließendem Punkt. Anschließend
+kann die Simulation mit der Klausel \texttt{start} gestartet werden:
+\begin{lstlisting}[language=Prolog]
+?- [turing].
+% turing compiled 0.01 sec, 0 bytes
+true.
+?- [program].
+% program compiled 0.00 sec, 0 bytes
+true.
+?- start.
+\end{lstlisting}
+Danach startet die Simulation, was an der Ausgabe der einzelnen Schritte
+erkannt werden kann. Die Ausgabe eines Schrittes sieht wie folgt aus:
+\begin{lstlisting}[]
+?- start.
+Schritt 1:
+    Momentaner Zustand: 0; Momentanes Band:
+      ..., % , %, %, %, %, [%], %, %, %, %, ...
+    Gelesen: %; Schreibe: 1
+    Bewege: Links ; Folgezustand: 1
+    Resultierendes Band: 
+      ..., % , %, %, %, %, 1, [%], %, %, %, ...
+fortsetzen mit [Enter]
+\end{lstlisting}
+Jetzt kann die Simulation Schritt für Schritt durchgeführt werden. Wenn
+der Endzustand gefunden wurde, so wird eine abschliessende Information
+usgegeben. Dies sieht z.B. wie folgt aus:
+\begin{lstlisting}[]
+Fertig nach 7 Schritten:
+    Endzustand: 4
+    Elemente vor der aktuellen Position:  3
+    Elemente nach der aktuellen Position: 2
+    Resultierendes Band:
+       ..., % , %, %, %, %, [1], 1, 1, %, %, ...
+    Ausgabeband (Band ohne Nichteingabesymbole):
+       [ ,  ,  , [1], 1, 1]
+true.
+?- 
+\end{lstlisting}
+Anschließend kann die Simulation erneut gestartet werden. Wenn die
+Definition geändert werden soll muss vorher die Datei
+\texttt{program.pl} neu geladen werden.
 
 \end{document}
