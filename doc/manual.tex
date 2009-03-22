@@ -1,0 +1,152 @@
+\documentclass[final,a4paper,11pt,notitlepage,halfparskip]{scrreprt}
+
+\usepackage[german,ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[babel,german=quotes]{csquotes}
+%\usepackage{fancybox}
+%\usepackage{color}
+\usepackage{xcolor}
+\usepackage{hyperref}
+%\usepackage{floatflt}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+%\usepackage{listings}
+
+\setkomafont{caption}{\footnotesize\linespread{1}\selectfont}
+\setlength{\abovecaptionskip}{-0.1cm}
+\addto\captionsngerman{\renewcommand\figurename{Abb.}}
+
+\subject{Beleg Programmierparadigmen}
+\title{Simulation eine Turingmaschine}
+\author{Jan Losinski\\
+\small{Mat. Nr. 25517}\\
+\small{g08s29}}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter{Implementierung}
+\section{Allgemeines}
+Eine Turingmaschine ist ein einfaches Konstrukt aus einem (in beide 
+Richtungen unendlichem) Band, einem Lese/Schreibkopf, einer Menge von
+Zuständen, einem Bandalphabet, einem Eingabealphabet welches eine
+Teilmenge des Bandalphabetes ist und einer Menge von Zustandsübergängen.
+
+Dabei ist ein Zustand als Startzustand und (mindestens) einer als
+Endzustand definiert, an denen die Turingmaschine ihre Arbeit beginnt
+und an dem sie anhält. Das Ergebnis des Laufes steht nach dem Halten, 
+die Eingabe vor dem Laufen auf dem Band.
+
+Die Formale Definition einer Turingmashchine $M=(Q, \Sigma, \Gamma,
+\delta, q_0, \square, F)$ lautet wie Folgt:
+
+\begin{itemize}
+    \item  $Q$ ist die endliche Zustandsmenge.
+    \item  $\Sigma$ ist die endliche Zustandsmenge.
+    \item  $Gamma \supset \Sigma$ ist das endliche Bandalphabet.
+    \item  $\square \in \Gamma\setminus\Sigma$ steht für das leere Feld.
+    \item  $F \subseteq Q$ ist die Menge der End- bzw. akzeptierenden Zustände.
+    \item  $\delta: (Q \setminus F)\times \Gamma \rightarrow Q \times
+	\Gamma \times \{ L, 0, R \}$ ist die Überführungsfunktion.
+    \item  $q_0 \in Q$ ist der Anfangszustand.  	
+    \item  $q_{e1} \dots q_{en} \in Q$ sind die Endzustände.  	
+\end{itemize}
+
+Die Aufgabe besteht darin, die Bestandteie der Turingmaschine in Prolog
+zu modellieren. Die Ausführung des Modells soll anschließend simuliert
+werden.
+
+Die Modellierung geschieht durch definition geeigneter Prädikate. So
+werden die Zustände durch das Prädikat \texttt{z} definiert, die
+Endzustände durch \texttt{ze} usw. Die Definition der konkreten Maschine
+steht zudem in einer gesonderten Datei: 
+\begin{itemize}
+    \item Die Datei \texttt{turing.pl} enthält die Klauseln zur
+	Simulation der Maschine
+    \item Die Datei \texttt{program.pl} enthält die Klauseln zur
+	Definition der zu simulierenden Maschine.	
+\end{itemize}
+Die beiden Daeien müssen daher beide vor der Simulation in das
+Prologsystem geladen werden. Der Vorteil besteht datin, das es
+Problemlos möglich ist, die Definition durch eine neue auszutauschen.
+
+\section{Das Band}
+Das Band der Turingmaschine ist ltaut Definition in beide Richtungen
+unendlich lang. Der Zugriff auf die einzelnen Speicherzellen des Bandes
+ist nur sequentiell möglich. Dies bedeutet, das ein Wahlfreier Zugriff
+mittels einer absoluten oder einer offsetpositionierung nicht
+implementiert werde muss.
+
+Auf Grund dieser Eigenschaften wurde eine Implementierung als zwei
+unbegrenzte Stapel gewählt. Diese Repräsentieren die beiden Richtungen
+des Bandes. Dazu wurden die Klauseln \texttt{myPush} zum hinzufügen
+eines Elementes zum Stapel und \texttt{myPop} zum entfernen des obersten
+Elementes eines Stapels eingeführt. Sollte einer der beiden Stapel
+einmal leer sein, so wird bei \texttt{myPop} das Blank-Symbol als 
+aktuelles Element und eine leere Liste als Stapel zurückgegeben.
+
+Auf diesen zwei Klauseln aufbauend wird das Verhalten eines echten
+Bandes mit den Klauseln \texttt{myPrev} und \texttt{myNext} simuliert.
+Diese setzen den "`Lesekopf"' der simulierten Turingmaschine auf die
+vorherige, bzw. die nächste Bandzelle. Realisiert wird dies durch ein
+umverteilen der Elemente. So wird bei \texttt{myPrev} das aktuelle
+Element auf den Vorgängerstapel gelegt und das oberste Element des
+Nachfolgerstapels als neues aktuelles Element geholt. Bei
+\texttt{myNext} geschieht dies entsprechend umgekehrt. Der Vorteil ist
+hier der einfache Aufbau und die nicht vorhandene Längenbegrenzung (vom
+gegrenzen Addressberech der unterliegenden Hardware einmal abgesehen).
+
+Zusätzlich existiert noch die Klausel \texttt{myMove} mit verschiedenen
+Argumenten. Diese dient der direkten Abbildung von Bandaktionen in den
+Zustandsübergangsdefinitionen auf die Bandoperationen.
+
+\section{Ausgabe}
+Die Ausgabe der Simulation wird duch verschiedene Klauseln realisiert.
+Die Klauseln \texttt{myPrintIter}, \texttt{myPrint} und
+\texttt{myPrint2} sind für die Ausgabe des aktuellen Bandes zuständig.
+In \texttt{myPrintIter} ist die eigentliche Ausgabe der Inhalte des
+Bandes definiert. Dabei wird die Stapelliste durchgegangen und Element
+für Element durch Komma getrennt ausgegeben. Die Klauseln
+\texttt{myPrint} und \texttt{myPrint2} dienen der Vorbereitung der
+Stapel für \texttt{myPrintIter}. So muss zum Beispiel der Inhalt des
+Vorgängerstapel mittels des eingebauten Prädikates \texttt{reverse}
+umgekehrt werden. Zudem sorgt \texttt{myPrint2} mittels der Hilfsklausel
+\texttt{replaceNonInput} dafür, das nicht zum Eingabealphabet gehörende
+Zeichen durch ein Leerzeichen ersetzt werden. Dies ist notwendig, da auf
+dem Ausgabeband soche Zeichen nicht auftauchen dürfen.
+
+Die Klausel \texttt{myPrintProgress} dient der Ausgabe des Fortschrittes
+der Simulation. Sie wird nach jedem Zustandsübergang aufgerufen. Sie
+gibt alle Informationen, wie das momentane Band, die Zustände, die
+gelesenen und geschriebenen Symbole, etc aus. Am Ende der
+Klauseldefinition wird auf die Eingabe eines Bytes gewartet. Dies dient
+der Unterbrechung der Simulation bis zum Drücken der "`Enter"' Taste.
+
+\section{Simulation}
+Die simulation besteht aus dem Auswählen des Startzustandes und dem
+vollziehen der Zustandsübergänge, bis ein Endzustand erreicht ist. Dies
+geschieht durch die Klauseln \texttt{run} und \texttt{start}. 
+
+Die Klausel \texttt{run} vollzieht dabei die eigentlichen Zustandsübergänge
+und "`sucht"' dabei den Endzustand. Bei jedem Übergang wird der Aktuelle
+Status aller Zeile der Maschine ausgegeben. Wurde der Endzustand
+gefunden, so werden verschidene Informationen, wie die Anzahl der
+Schritte und das Ausgabeband ausgegeben.
+
+Die Klausel \texttt{start} prüft das Vorhandensein eines Startzustandes,
+eines Anfangsbandes sowie der Position auf dem Anfangsband. Ist alles
+vorhanden, so wird das Band "`vorbereitet"'. Dies wird duch die Klauseln
+\texttt{prepareBand} und \texttt{prepareBand2} übernommen. Sie füllen
+das Band mit dem Inhalt der als Anfangsband angegebenen Liste und setzen
+den "`Lesekopf"' aus die angegebene Position. Anschließend wird das
+Vollziehen der Zustandsübergänge mit dem Startzustand in Gang gesetzt.
+
+\chapter{Benutzung}
+
+\end{document}
