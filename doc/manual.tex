@@ -129,7 +129,7 @@ Klauseldefinition wird auf die Eingabe eines Bytes gewartet. Dies dient
 der Unterbrechung der Simulation bis zum Drücken der "`Enter"' Taste.
 
 \section{Simulation}
-Die simulation besteht aus dem Auswählen des Startzustandes und dem
+Die Simulation besteht aus dem Auswählen des Startzustandes und dem
 vollziehen der Zustandsübergänge, bis ein Endzustand erreicht ist. Dies
 geschieht durch die Klauseln \texttt{run} und \texttt{start}. 
 
@@ -148,5 +148,53 @@ den "`Lesekopf"' aus die angegebene Position. Anschließend wird das
 Vollziehen der Zustandsübergänge mit dem Startzustand in Gang gesetzt.
 
 \chapter{Benutzung}
+
+\section{Definition}
+Die Turingmaschine muss zuerst definiert werden. Dazu gehören folgende
+Bestandteile:
+\begin{itemize}
+    \item Die Bewegungsrichtung des Bandes "`\texttt{r(zeichen)}"'. Für
+	"`zeichen"' gibt es genau 3 Werte: \texttt{r} für rechts,
+	\texttt{l} für Links und \texttt{n} um die Position nicht zu
+	ändern.
+    \item Das Eingabealphabet "`\texttt{e(zeichen)}"'. Um zum Beispiel
+	"`\texttt{1}"' als Zeichen des Eingabealphabes zu definieren
+	muss die Klausel "`\texttt{e(1)}"' definiert werden.
+    \item Das Blank-Zeichen \texttt{bl(zeichen)}, welches ein leeres
+	Feld auf dem Band repräsentiert. Soll "`\texttt{\%}"' als
+	Blankzeichen zu definieren ist die Klausel "`\texttt{bl(\%)}"'
+	nötig.	
+    \item Das Bandalphabet "`\texttt{b(zeichen)}"'. Dies besteht aus 
+	dem Eingabealphabet und dem Blank-Zeichen. Daher besteht diese 
+	Definition aus den zwei Klauseln "`\texttt{b(X) :- e(X).}"' 
+	und "`\texttt{b(X) :- bl(X).}"'.
+    \item Den Zuständen "`\texttt{z(zeichen)}"'. Jeder Zustand
+	"`\texttt{n}"' muss mit einer Definition "`\texttt{z(n)}"' 
+	aufgeführt werden.	
+    \item Dem Anfangszustand "`\texttt{za(zustand)}"'. Soll zum 
+	Beispiel der Zustand "`\texttt{0}"' (def. als "`\texttt{z(0)}"') 
+	als Startzustand definiert werden muss die Klausel
+	"`\texttt{za(z(0))}"' in der Definition existieren.
+    \item Dem Edzustand "`\texttt{ze(zustand)}"'. Soll zum 
+	Beispiel der Zustand "`\texttt{0}"' (def. als "`\texttt{z(0)}"') 
+	als Endzustand definiert werden muss die Klausel
+	"`\texttt{ze(z(0))}"' in der Definition existieren.
+    \item Die Zustandsübergänge 
+	"`\texttt{zu(zustd, gelesen, schreiben, bewegen, nextzust)}"'.
+	Um zum Beispiel einen Übergang von Zustand "`\texttt{0}"' zu
+	Zustand "`\texttt{1}"' bei gelesenem "`\texttt{\%}"' zu
+	definieren, bei dem "`\texttt{1}"' geschrieben wird und das Band
+	nach Rechts bewegt wird dient die Klausel 
+	"`\texttt{zu(z(0),'\%', '1',  r(l), z(1))}"'.
+    \item Das Eingabe- oder Anfangsband "`\texttt{ab(Liste)}"'. Eine
+	Beispielbelegung sieht we folgt aus:
+	"`\texttt{ab(['\%','1','1','\%','\%','1']).}"'	
+    \item Die Anfangsposition auf dem Eingabealphabet
+	"`\texttt{ap(zahl)}"'. Soll der "`Lesekopf"' Zum start auf dem
+	dritten Element stehen ist die Definition "`\texttt{ap(3)}"'
+	notwendig.	
+\end{itemize}
+
+\section{Ausführung}
 
 \end{document}
