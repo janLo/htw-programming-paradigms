@@ -44,7 +44,7 @@
 \addto\captionsngerman{\renewcommand\figurename{Abb.}}
 
 \subject{Beleg Programmierparadigmen}
-\title{Simulation eine Turingmaschine}
+\title{Simulation einer Turingmaschine}
 \author{Jan Losinski\\
 \small{Mat. Nr. 25517}\\
 \small{g08s29}}
@@ -58,9 +58,9 @@
 \chapter{Implementierung}
 \section{Allgemeines}
 Eine Turingmaschine ist ein einfaches Konstrukt aus einem (in beide 
-Richtungen unendlichem) Band, einem Lese/Schreibkopf, einer Menge von
-Zuständen, einem Bandalphabet, einem Eingabealphabet welches eine
-Teilmenge des Bandalphabetes ist und einer Menge von Zustandsübergängen.
+Richtungen unendlichen) Band, einem Lese/Schreibkopf, einer Menge von
+Zuständen, einem Bandalphabet, einem Eingabealphabet, welches eine
+Teilmenge des Bandalphabetes und einer Menge von Zustandsübergängen ist.
 
 Dabei ist ein Zustand als Startzustand und (mindestens) einer als
 Endzustand definiert, an denen die Turingmaschine ihre Arbeit beginnt
@@ -97,34 +97,34 @@ steht zudem in einer gesonderten Datei:
 	Definition der zu simulierenden Maschine.	
 \end{itemize}
 Die beiden Dateien müssen daher beide vor der Simulation in das
-Prologsystem geladen werden. Der Vorteil besteht darin, das es
-Problemlos möglich ist, die Definition durch eine neue auszutauschen.
+Prologsystem geladen werden. Der Vorteil besteht darin, dass es
+problemlos möglich ist die Definition durch eine neue auszutauschen.
 
 \section{Das Band}
 Das Band der Turingmaschine ist laut Definition in beide Richtungen
 unendlich lang. Der Zugriff auf die einzelnen Speicherzellen des Bandes
-ist nur sequentiell möglich. Dies bedeutet, das ein Wahlfreier Zugriff
+ist nur sequentiell möglich. Dies bedeutet, dass ein wahlfreier Zugriff
 mittels einer absoluten oder einer Offsetpositionierung nicht
-implementiert werde muss.
+implementiert werden muss.
 
 Auf Grund dieser Eigenschaften wurde eine Implementierung als zwei
-unbegrenzte Stapel gewählt. Diese Repräsentieren die beiden Richtungen
-des Bandes. Dazu wurden die Klauseln \texttt{myPush} zum hinzufügen
-eines Elementes zum Stapel und \texttt{myPop} zum entfernen des obersten
+unbegrenzte Stapel gewählt. Diese repräsentieren die beiden Richtungen
+des Bandes. Dazu wurden die Klauseln \texttt{myPush} zum Hinzufügen
+eines Elementes zum Stapel und \texttt{myPop} zum Entfernen des obersten
 Elementes eines Stapels eingeführt. Sollte einer der beiden Stapel
 einmal leer sein, so wird bei \texttt{myPop} das Blank-Symbol als 
 aktuelles Element und eine leere Liste als Stapel zurückgegeben.
 
-Auf diesen zwei Klauseln aufbauend wird das Verhalten eines echten
+Auf diesen zwei Klauseln aufbauend, wird das Verhalten eines echten
 Bandes mit den Klauseln \texttt{myPrev} und \texttt{myNext} simuliert.
 Diese setzen den "`Lesekopf"' der simulierten Turingmaschine auf die
-vorherige, bzw. die nächste Bandzelle. Realisiert wird dies durch ein
+vorherige bzw. die nächste Bandzelle. Realisiert wird dies durch ein
 Umverteilen der Elemente. So wird bei \texttt{myPrev} das aktuelle
 Element auf den Vorgängerstapel gelegt und das oberste Element des
 Nachfolgerstapels als neues aktuelles Element geholt. Bei
 \texttt{myNext} geschieht dies entsprechend umgekehrt. Der Vorteil ist
 hier der einfache Aufbau und die nicht vorhandene Längenbegrenzung (vom
-begrenzen Adressbereich der unterliegenden Hardware einmal abgesehen).
+begrenzten Adressbereich der unterliegenden Hardware einmal abgesehen).
 
 Zusätzlich existiert noch die Klausel \texttt{myMove} mit verschiedenen
 Argumenten. Diese dient der direkten Abbildung von Bandaktionen in den
@@ -139,9 +139,9 @@ Bandes definiert. Dabei wird die Stapelliste durchgegangen und Element
 für Element durch Komma getrennt ausgegeben. Die Klauseln
 \texttt{myPrint} und \texttt{myPrint2} dienen der Vorbereitung der
 Stapel für \texttt{myPrintIter}. So muss zum Beispiel der Inhalt des
-Vorgängerstapel mittels des eingebauten Prädikates \texttt{reverse}
+Vorgängerstapels mit Hilfe des eingebauten Prädikates \texttt{reverse}
 umgekehrt werden. Zudem sorgt \texttt{myPrint2} mittels der Hilfsklausel
-\texttt{replaceNonInput} dafür, das nicht zum Eingabealphabet gehörende
+\texttt{replaceNonInput} dafür, dass nicht zum Eingabealphabet gehörende
 Zeichen durch ein Leerzeichen ersetzt werden. Dies ist notwendig, da auf
 dem Ausgabeband solche Zeichen nicht auftauchen dürfen.
 
@@ -154,12 +154,12 @@ der Unterbrechung der Simulation bis zum Drücken der "`Enter"' Taste.
 
 \section{Simulation}
 Die Simulation besteht aus dem Auswählen des Startzustandes und dem
-vollziehen der Zustandsübergänge, bis ein Endzustand erreicht ist. Dies
+Vollziehen der Zustandsübergänge bis ein Endzustand erreicht ist. Dies
 geschieht durch die Klauseln \texttt{run} und \texttt{start}. 
 
 Die Klausel \texttt{run} vollzieht dabei die eigentlichen Zustandsübergänge
-und "`sucht"' dabei den Endzustand. Bei jedem Übergang wird der Aktuelle
-Status aller Zeile der Maschine ausgegeben. Wurde der Endzustand
+und "`sucht"' dabei den Endzustand. Bei jedem Übergang wird der aktuelle
+Status aller Zeilen der Maschine ausgegeben. Wurde der Endzustand
 gefunden, so werden verschiedene Informationen, wie die Anzahl der
 Schritte und das Ausgabeband ausgegeben.
 
@@ -168,7 +168,7 @@ eines Anfangsbandes sowie der Position auf dem Anfangsband. Ist alles
 vorhanden, so wird das Band "`vorbereitet"'. Dies wird durch die Klauseln
 \texttt{prepareBand} und \texttt{prepareBand2} übernommen. Sie füllen
 das Band mit dem Inhalt der als Anfangsband angegebenen Liste und setzen
-den "`Lesekopf"' aus die angegebene Position. Anschließend wird das
+den "`Lesekopf"' an die angegebene Position. Anschließend wird das
 Vollziehen der Zustandsübergänge mit dem Startzustand in Gang gesetzt.
 
 \chapter{Benutzung}
@@ -182,40 +182,40 @@ in der Datei \texttt{program.pl}. Dazu gehören folgende Bestandteile:
 	"`\texttt{l}"' für Links und "`\texttt{n}"' um die Position nicht 
 	zu ändern.
     \item Das Eingabealphabet "`\texttt{e(Zeichen)}"'. Um zum Beispiel
-	"`\texttt{1}"' als Zeichen des Eingabealphabes zu definieren
+	"`\texttt{1}"' als Zeichen des Eingabealphabets zu definieren
 	muss die Klausel "`\texttt{e(1)}"' definiert werden.
     \item Das Blank-Zeichen \texttt{bl(Zeichen)}, welches ein leeres
-	Feld auf dem Band repräsentiert. Soll "`\texttt{\%}"' als
+	Feld auf dem Band repräsentiert. Um "`\texttt{\%}"' als
 	Blank-Zeichen zu definieren ist die Klausel "`\texttt{bl(\%)}"'
 	nötig.	
     \item Das Bandalphabet "`\texttt{b(Zeichen)}"'. Dies besteht aus 
 	dem Eingabealphabet und dem Blank-Zeichen. Daher besteht diese 
 	Definition aus den zwei Klauseln "`\texttt{b(X) :- e(X).}"' 
 	und "`\texttt{b(X) :- bl(X).}"'.
-    \item Den Zuständen "`\texttt{z(Zeichen)}"'. Jeder Zustand
+    \item Die Zustände "`\texttt{z(Zeichen)}"'. Jeder Zustand
 	"`\texttt{n}"' muss mit einer Definition "`\texttt{z(n)}"' 
 	aufgeführt werden.	
-    \item Dem Anfangszustand "`\texttt{za(zustand)}"'. Soll zum 
+    \item Der Anfangszustand "`\texttt{za(zustand)}"'. Soll zum 
 	Beispiel der Zustand "`\texttt{0}"' (def. als "`\texttt{z(0)}"') 
-	als Startzustand definiert werden muss die Klausel
+	als Startzustand definiert werden, muss die Klausel
 	"`\texttt{za(z(0))}"' in der Definition existieren.
-    \item Dem Edzustand "`\texttt{ze(zustand)}"'. Soll zum 
+    \item Der Endzustand "`\texttt{ze(zustand)}"'. Soll zum 
 	Beispiel der Zustand "`\texttt{0}"' (def. als "`\texttt{z(0)}"') 
-	als Endzustand definiert werden muss die Klausel
+	als Endzustand definiert werden, muss die Klausel
 	"`\texttt{ze(z(0))}"' in der Definition existieren.
     \item Die Zustandsübergänge 
 	"`\texttt{zu(zustd, gelesen, schreiben, bewegen, nextzust)}"'.
 	Um zum Beispiel einen Übergang von Zustand "`\texttt{0}"' zu
 	Zustand "`\texttt{1}"' bei gelesenem "`\texttt{\%}"' zu
 	definieren, bei dem "`\texttt{1}"' geschrieben wird und das Band
-	nach Rechts bewegt wird dient die Klausel 
+	nach Rechts bewegt wird, dient die Klausel 
 	"`\texttt{zu(z(0),'\%', '1',  r(l), z(1))}"'.
     \item Das Eingabe- oder Anfangsband "`\texttt{ab(Liste)}"'. Eine
-	Beispielbelegung sieht we folgt aus:
+	Beispielbelegung sieht wie folgt aus:
 	"`\texttt{ab(['\%','1','1','\%','\%','1']).}"'	
     \item Die Anfangsposition auf dem Eingabealphabet
-	"`\texttt{ap(zahl)}"'. Soll der "`Lesekopf"' Zum start auf dem
-	dritten Element stehen ist die Definition "`\texttt{ap(3)}"'
+	"`\texttt{ap(zahl)}"'. Soll der "`Lesekopf"' zum Start auf dem
+	dritten Element stehen, ist die Definition "`\texttt{ap(3)}"'
 	notwendig.	
 \end{itemize}
 All diese Definitionen sind notwendig für die Ausführung der Simulation.
@@ -227,8 +227,8 @@ Definitionen der zu simulierenden Maschine) in das Prologsystem geladen
 werden. Als Prologsystem wurde bei der Implementierung SWI-Prolog
 gewählt.  
 
-Das Laden der Dateien geschieht im SWI-Prolog durch angabe des
-Dateinamens in Eckigen Klammern mit abschließendem Punkt. Anschließend
+Das Laden der Dateien geschieht im SWI-Prolog durch Angabe des
+Dateinamens in eckigen Klammern mit abschließendem Punkt. Anschließend
 kann die Simulation mit der Klausel \texttt{start} gestartet werden:
 \begin{lstlisting}[language=Prolog]
 ?- [turing].
@@ -268,7 +268,7 @@ true.
 ?- 
 \end{lstlisting}
 Anschließend kann die Simulation erneut gestartet werden. Wenn die
-Definition geändert werden soll muss vorher die Datei
+Definition geändert werden soll, muss vorher die Datei
 \texttt{program.pl} neu geladen werden.
 
 \pagebreak
