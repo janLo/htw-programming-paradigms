@@ -67,7 +67,7 @@ Endzustand definiert, an denen die Turingmaschine ihre Arbeit beginnt
 und an dem sie anhält. Das Ergebnis des Laufes steht nach dem Halten, 
 die Eingabe vor dem Laufen auf dem Band.
 
-Die Formale Definition einer Turingmashchine $M=(Q, \Sigma, \Gamma,
+Die Formale Definition einer Turingmaschine $M=(Q, \Sigma, \Gamma,
 \delta, q_0, \square, F)$ lautet wie Folgt:
 
 \begin{itemize}
@@ -82,11 +82,11 @@ Die Formale Definition einer Turingmashchine $M=(Q, \Sigma, \Gamma,
     \item  $q_{e1} \dots q_{en} \in Q$ sind die Endzustände.  	
 \end{itemize}
 
-Die Aufgabe besteht darin, die Bestandteie der Turingmaschine in Prolog
+Die Aufgabe besteht darin, die Bestandteile der Turingmaschine in Prolog
 zu modellieren. Die Ausführung des Modells soll anschließend simuliert
 werden.
 
-Die Modellierung geschieht durch definition geeigneter Prädikate. So
+Die Modellierung geschieht durch Definition geeigneter Prädikate. So
 werden die Zustände durch das Prädikat \texttt{z} definiert, die
 Endzustände durch \texttt{ze} usw. Die Definition der konkreten Maschine
 steht zudem in einer gesonderten Datei: 
@@ -96,15 +96,15 @@ steht zudem in einer gesonderten Datei:
     \item Die Datei \texttt{program.pl} enthält die Klauseln zur
 	Definition der zu simulierenden Maschine.	
 \end{itemize}
-Die beiden Daeien müssen daher beide vor der Simulation in das
-Prologsystem geladen werden. Der Vorteil besteht datin, das es
+Die beiden Dateien müssen daher beide vor der Simulation in das
+Prologsystem geladen werden. Der Vorteil besteht darin, das es
 Problemlos möglich ist, die Definition durch eine neue auszutauschen.
 
 \section{Das Band}
-Das Band der Turingmaschine ist ltaut Definition in beide Richtungen
+Das Band der Turingmaschine ist laut Definition in beide Richtungen
 unendlich lang. Der Zugriff auf die einzelnen Speicherzellen des Bandes
 ist nur sequentiell möglich. Dies bedeutet, das ein Wahlfreier Zugriff
-mittels einer absoluten oder einer offsetpositionierung nicht
+mittels einer absoluten oder einer Offsetpositionierung nicht
 implementiert werde muss.
 
 Auf Grund dieser Eigenschaften wurde eine Implementierung als zwei
@@ -119,19 +119,19 @@ Auf diesen zwei Klauseln aufbauend wird das Verhalten eines echten
 Bandes mit den Klauseln \texttt{myPrev} und \texttt{myNext} simuliert.
 Diese setzen den "`Lesekopf"' der simulierten Turingmaschine auf die
 vorherige, bzw. die nächste Bandzelle. Realisiert wird dies durch ein
-umverteilen der Elemente. So wird bei \texttt{myPrev} das aktuelle
+Umverteilen der Elemente. So wird bei \texttt{myPrev} das aktuelle
 Element auf den Vorgängerstapel gelegt und das oberste Element des
 Nachfolgerstapels als neues aktuelles Element geholt. Bei
 \texttt{myNext} geschieht dies entsprechend umgekehrt. Der Vorteil ist
 hier der einfache Aufbau und die nicht vorhandene Längenbegrenzung (vom
-gegrenzen Addressberech der unterliegenden Hardware einmal abgesehen).
+begrenzen Adressbereich der unterliegenden Hardware einmal abgesehen).
 
 Zusätzlich existiert noch die Klausel \texttt{myMove} mit verschiedenen
 Argumenten. Diese dient der direkten Abbildung von Bandaktionen in den
 Zustandsübergangsdefinitionen auf die Bandoperationen.
 
 \section{Ausgabe}
-Die Ausgabe der Simulation wird duch verschiedene Klauseln realisiert.
+Die Ausgabe der Simulation wird durch verschiedene Klauseln realisiert.
 Die Klauseln \texttt{myPrintIter}, \texttt{myPrint} und
 \texttt{myPrint2} sind für die Ausgabe des aktuellen Bandes zuständig.
 In \texttt{myPrintIter} ist die eigentliche Ausgabe der Inhalte des
@@ -143,9 +143,9 @@ Vorgängerstapel mittels des eingebauten Prädikates \texttt{reverse}
 umgekehrt werden. Zudem sorgt \texttt{myPrint2} mittels der Hilfsklausel
 \texttt{replaceNonInput} dafür, das nicht zum Eingabealphabet gehörende
 Zeichen durch ein Leerzeichen ersetzt werden. Dies ist notwendig, da auf
-dem Ausgabeband soche Zeichen nicht auftauchen dürfen.
+dem Ausgabeband solche Zeichen nicht auftauchen dürfen.
 
-Die Klausel \texttt{myPrintProgress} dient der Ausgabe des Fortschrittes
+Die Klausel \texttt{myPrintProgress} dient der Ausgabe des Fortschritts
 der Simulation. Sie wird nach jedem Zustandsübergang aufgerufen. Sie
 gibt alle Informationen, wie das momentane Band, die Zustände, die
 gelesenen und geschriebenen Symbole, etc aus. Am Ende der
@@ -160,12 +160,12 @@ geschieht durch die Klauseln \texttt{run} und \texttt{start}.
 Die Klausel \texttt{run} vollzieht dabei die eigentlichen Zustandsübergänge
 und "`sucht"' dabei den Endzustand. Bei jedem Übergang wird der Aktuelle
 Status aller Zeile der Maschine ausgegeben. Wurde der Endzustand
-gefunden, so werden verschidene Informationen, wie die Anzahl der
+gefunden, so werden verschiedene Informationen, wie die Anzahl der
 Schritte und das Ausgabeband ausgegeben.
 
 Die Klausel \texttt{start} prüft das Vorhandensein eines Startzustandes,
 eines Anfangsbandes sowie der Position auf dem Anfangsband. Ist alles
-vorhanden, so wird das Band "`vorbereitet"'. Dies wird duch die Klauseln
+vorhanden, so wird das Band "`vorbereitet"'. Dies wird durch die Klauseln
 \texttt{prepareBand} und \texttt{prepareBand2} übernommen. Sie füllen
 das Band mit dem Inhalt der als Anfangsband angegebenen Liste und setzen
 den "`Lesekopf"' aus die angegebene Position. Anschließend wird das
@@ -186,7 +186,7 @@ in der Datei \texttt{program.pl}. Dazu gehören folgende Bestandteile:
 	muss die Klausel "`\texttt{e(1)}"' definiert werden.
     \item Das Blank-Zeichen \texttt{bl(Zeichen)}, welches ein leeres
 	Feld auf dem Band repräsentiert. Soll "`\texttt{\%}"' als
-	BlankZeichen zu definieren ist die Klausel "`\texttt{bl(\%)}"'
+	Blank-Zeichen zu definieren ist die Klausel "`\texttt{bl(\%)}"'
 	nötig.	
     \item Das Bandalphabet "`\texttt{b(Zeichen)}"'. Dies besteht aus 
 	dem Eingabealphabet und dem Blank-Zeichen. Daher besteht diese 
@@ -228,7 +228,7 @@ werden. Als Prologsystem wurde bei der Implementierung SWI-Prolog
 gewählt.  
 
 Das Laden der Dateien geschieht im SWI-Prolog durch angabe des
-Dateinamends in Eckigen Klammern mit abschließendem Punkt. Anschließend
+Dateinamens in Eckigen Klammern mit abschließendem Punkt. Anschließend
 kann die Simulation mit der Klausel \texttt{start} gestartet werden:
 \begin{lstlisting}[language=Prolog]
 ?- [turing].
@@ -253,8 +253,8 @@ Schritt 1:
 fortsetzen mit [Enter]
 \end{lstlisting}
 Jetzt kann die Simulation Schritt für Schritt durchgeführt werden. Wenn
-der Endzustand gefunden wurde, so wird eine abschliessende Information
-usgegeben. Dies sieht z.B. wie folgt aus:
+der Endzustand gefunden wurde, so wird eine abschließende Information
+ausgegeben. Dies sieht z.B. wie folgt aus:
 \begin{lstlisting}[]
 Fertig nach 7 Schritten:
     Endzustand: 4
